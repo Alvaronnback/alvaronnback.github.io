@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weekend Planner — Live-version</title>
+<style>
+  :root{
+    --paper: #F3EEE1; --paper-2:#EAE2CD; --ink:#26313A; --ink-soft:#5B6670;
+    --sun:#E8A93B; --sun-soft:#FBEBC9; --rain:#3E6E93; --rain-soft:#DCE7EE;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper);
+    background-image: radial-gradient(circle at 1px 1px, rgba(38,49,58,0.06) 1px, transparent 0);
+    background-size:22px 22px;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;
+    color:var(--ink); min-height:100vh; display:flex; flex-direction:column; align-items:center; padding:28px 16px 60px;
+  }
+  .top{ max-width:480px; width:100%; margin-bottom:22px; }
+  h1{ font-size:1.8rem; margin:0 0 6px; }
+  .sub{ color:var(--ink-soft); font-size:0.92rem; line-height:1.5; max-width:46ch; }
+  .badge{ display:inline-block; background:#fff; border:1.5px solid var(--ink); border-radius:8px; padding:2px 8px; font-size:0.72rem; font-weight:600; margin-bottom:8px; }
+
+  .panel{
+    width:100%; max-width:420px; background:#FBF8EF; border:2px solid var(--ink);
+    border-radius:18px; padding:20px; box-shadow:4px 5px 0 rgba(38,49,58,0.10); margin-bottom:16px;
+  }
+  label{ font-size:0.78rem; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:4px; }
+  .field{ border:2px solid var(--ink); border-radius:10px; padding:9px 11px; font-size:0.95rem; background:#fff; width:100%; margin-bottom:12px; }
+  .field:focus{ outline:2px dashed var(--rain); outline-offset:2px; }
+  details{ margin-bottom:14px; }
+  summary{ cursor:pointer; font-size:0.8rem; color:var(--ink-soft); font-weight:600; }
+  details .field{ margin-top:8px; }
+  .hint{ font-size:0.72rem; color:var(--ink-soft); margin:-8px 0 12px; line-height:1.4; }
+
+  .btn{
+    font-weight:700; font-size:1rem; border:2px solid var(--ink); border-radius:12px;
+    background:var(--ink); color:var(--paper); padding:10px 18px; cursor:pointer; width:100%;
+    box-shadow:3px 3px 0 rgba(38,49,58,0.3); transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .btn:hover{ transform:translate(1px,1px); box-shadow:2px 2px 0 rgba(38,49,58,0.3); }
+  .btn:disabled{ opacity:0.55; cursor:progress; }
+
+  .status{ font-size:0.85rem; color:var(--ink-soft); text-align:center; padding:10px 0; }
+  .error{ background:#FBEAEA; border:1.5px solid #B23; color:#7A1E1E; border-radius:10px; padding:10px 12px; font-size:0.85rem; margin-top:6px; }
+
+  .weather-card{ border:2px solid var(--ink); border-radius:16px; padding:18px; text-align:center; margin-bottom:14px; }
+  .weather-card.sunny{ background:var(--sun-soft); }
+  .weather-card.rainy{ background:var(--rain-soft); }
+  .weather-icon{ font-size:2.6rem; margin-bottom:4px; }
+  .temp{ font-size:2rem; font-weight:700; margin:0; }
+  .cond{ margin:2px 0 0; font-size:0.9rem; color:var(--ink-soft); }
+  .city-name{ font-weight:700; font-size:1.05rem; margin:0 0 2px; }
+  .timestamp{ font-size:0.72rem; color:var(--ink-soft); margin-top:4px; }
+
+  .note{ font-size:0.78rem; color:var(--ink-soft); background:#fff; border:1.5px dashed var(--ink-soft); border-radius:10px; padding:8px 10px; margin-bottom:14px; line-height:1.4; }
+
+  .list{ display:flex; flex-direction:column; gap:10px; }
+  .card{ border:2px solid var(--ink); border-radius:12px; padding:10px 12px; display:flex; gap:10px; align-items:flex-start; background:#fff; }
+  .card .emoji{ font-size:1.3rem; }
+  .card h3{ margin:0 0 2px; font-size:0.92rem; }
+  .card p{ margin:0; font-size:0.76rem; color:var(--ink-soft); line-height:1.35; }
+  .hidden{ display:none; }
+</style>
+</head>
+<body>
+
+  <div class="top">
+    <span class="badge">LIVE-VERSION</span>
+    <h1>Weekend Planner</h1>
+    <p class="sub">Skriv in en stad. Appen hämtar riktig väderdata just nu från Open-Meteo och föreslår aktiviteter utifrån vädret.</p>
+  </div>
+
+  <div class="panel">
+    <label for="city">Stad</label>
+    <input class="field" id="city" type="text" placeholder="t.ex. Stockholm" value="Stockholm">
+
+    <details>
+      <summary>Valfritt: lägg till OpenTripMap-nyckel för riktiga platsförslag</summary>
+      <input class="field" id="apiKey" type="text" placeholder="Din OpenTripMap API-nyckel">
+      <p class="hint">Utan nyckel visas exempel-aktiviteter istället för riktiga träffar. Skaffa gratis nyckel på opentripmap.io.</p>
+    </details>
+
+    <button class="btn" id="goBtn">Hämta väder & förslag</button>
+    <div id="status" class="status hidden"></div>
+    <div id="errorBox" class="error hidden"></div>
+  </div>
+
+  <div class="panel hidden" id="weatherPanel"></div>
+  <div class="panel hidden" id="activityPanel"></div>
+
+  <p class="sub" style="text-align:center; margin-top:6px;">Öppna filen lokalt i din webbläsare för att testa — externa API-anrop fungerar inte i hostade förhandsvisningar.</p>
+
+<script>
+const outdoorCodes = [0,1,2,3];
+
+const codeInfo = {
+  0:["Klart",'☀️'], 1:["Mest klart",'🌤️'], 2:["Halvklart",'⛅'], 3:["Mulet",'☁️'],
+  45:["Dimma",'🌫️'], 48:["Dimma med rimfrost",'🌫️'],
+  51:["Lätt duggregn",'🌦️'], 53:["Duggregn",'🌦️'], 55:["Kraftigt duggregn",'🌧️'],
+  56:["Underkylt duggregn",'🌧️'], 57:["Kraftigt underkylt duggregn",'🌧️'],
+  61:["Lätt regn",'🌦️'], 63:["Regn",'🌧️'], 65:["Kraftigt regn",'🌧️'],
+  66:["Underkylt regn",'🌧️'], 67:["Kraftigt underkylt regn",'🌧️'],
+  71:["Lätt snöfall",'🌨️'], 73:["Snöfall",'🌨️'], 75:["Kraftigt snöfall",'❄️'], 77:["Snökorn",'🌨️'],
+  80:["Lätta regnskurar",'🌦️'], 81:["Regnskurar",'🌧️'], 82:["Kraftiga regnskurar",'⛈️'],
+  85:["Lätta snöbyar",'🌨️'], 86:["Kraftiga snöbyar",'❄️'],
+  95:["Åska",'⛈️'], 96:["Åska med hagel",'⛈️'], 99:["Kraftig åska med hagel",'⛈️']
+};
+
+const fallbackActivities = {
+  sunny: [
+    { emoji:"🌳", name:"Stadspark eller grönområde", desc:"Sök på 'park' i din stad i Google Maps." },
+    { emoji:"🚶", name:"Promenad i city", desc:"Utomhus, gratis, passar soligt väder." },
+    { emoji:"🚴", name:"Cykeltur", desc:"Hyr cykel eller ta med egen." }
+  ],
+  rainy: [
+    { emoji:"🖼️", name:"Konstmuseum", desc:"Sök på 'museum' i din stad." },
+    { emoji:"🔬", name:"Science center / utställning", desc:"Bra inomhusalternativ vid regn." },
+    { emoji:"☕", name:"Kafé", desc:"Mysigt inomhusalternativ." }
+  ]
+};
+
+const cityInput = document.getElementById('city');
+const apiKeyInput = document.getElementById('apiKey');
+const goBtn = document.getElementById('goBtn');
+const statusEl = document.getElementById('status');
+const errorBox = document.getElementById('errorBox');
+const weatherPanel = document.getElementById('weatherPanel');
+const activityPanel = document.getElementById('activityPanel');
+
+const savedKey = localStorage.getItem('otm_api_key');
+if(savedKey) apiKeyInput.value = savedKey;
+
+function setStatus(msg){
+  statusEl.textContent = msg;
+  statusEl.classList.toggle('hidden', !msg);
+}
+function setError(msg){
+  errorBox.textContent = msg;
+  errorBox.classList.toggle('hidden', !msg);
+}
+
+goBtn.addEventListener('click', run);
+
+async function run(){
+  const city = cityInput.value.trim();
+  if(!city){ setError("Skriv in en stad."); return; }
+  setError('');
+  weatherPanel.classList.add('hidden');
+  activityPanel.classList.add('hidden');
+  goBtn.disabled = true;
+  setStatus('Slår upp ' + city + ' …');
+
+  try {
+    // Steg 1: geokoda stadsnamn -> koordinater (Open-Meteo Geocoding API)
+    const geoUrl = 'https://geocoding-api.open-meteo.com/v1/search?name=' + encodeURIComponent(city) + '&count=1&language=sv&format=json';
+    const geoRes = await fetch(geoUrl);
+    if(!geoRes.ok) throw new Error('Geocoding-anropet misslyckades (' + geoRes.status + ')');
+    const geoData = await geoRes.json();
+    if(!geoData.results || geoData.results.length === 0){
+      throw new Error('Hittade ingen stad som matchar "' + city + '". Kontrollera stavningen.');
+    }
+    const place = geoData.results[0];
+
+    setStatus('Hämtar väder för ' + place.name + ' …');
+
+    // Steg 2: hämta aktuellt väder för koordinaterna (Open-Meteo Forecast API)
+    const wUrl = 'https://api.open-meteo.com/v1/forecast?latitude=' + place.latitude +
+      '&longitude=' + place.longitude +
+      '&current=temperature_2m,precipitation,weathercode&timezone=auto';
+    const wRes = await fetch(wUrl);
+    if(!wRes.ok) throw new Error('Väderanropet misslyckades (' + wRes.status + ')');
+    const wData = await wRes.json();
+    const code = wData.current.weathercode;
+    const temp = wData.current.temperature_2m;
+    const time = wData.current.time;
+    const isOutdoor = outdoorCodes.includes(code);
+    const info = codeInfo[code] || ["Okänt väder", "🌡️"];
+
+    renderWeather(place, temp, info, time, isOutdoor);
+
+    setStatus('Hämtar förslag …');
+
+    const key = apiKeyInput.value.trim();
+    if(key){ localStorage.setItem('otm_api_key', key); }
+
+    if(key){
+      await renderRealActivities(place, isOutdoor, key);
+    } else {
+      renderFallbackActivities(place, isOutdoor);
+    }
+
+    setStatus('');
+  } catch(err){
+    setError('Något gick fel: ' + err.message + ' (Kontrollera din internetanslutning — och kom ihåg att detta bara fungerar när filen öppnas lokalt, inte i en hostad förhandsvisning.)');
+    setStatus('');
+  } finally {
+    goBtn.disabled = false;
+  }
+}
+
+function renderWeather(place, temp, info, time, isOutdoor){
+  const [label, icon] = info;
+  const dt = new Date(time);
+  const dateStr = dt.toLocaleDateString('sv-SE', { weekday:'long', day:'numeric', month:'long' });
+  const timeStr = dt.toLocaleTimeString('sv-SE', { hour:'2-digit', minute:'2-digit' });
+  weatherPanel.innerHTML =
+    '<div class="weather-card ' + (isOutdoor ? 'sunny' : 'rainy') + '">' +
+      '<p class="city-name">' + place.name + (place.country ? ', ' + place.country : '') + '</p>' +
+      '<div class="weather-icon">' + icon + '</div>' +
+      '<p class="temp">' + Math.round(temp) + '°C</p>' +
+      '<p class="cond">' + label + '</p>' +
+      '<p class="timestamp">Live-data från Open-Meteo · ' + dateStr + ' ' + timeStr + '</p>' +
+    '</div>' +
+    '<div class="note">Logik: väderkod ' + (isOutdoor ? 'utan nederbörd' : 'med nederbörd/dimma') +
+      ' → ' + (isOutdoor ? 'utomhusförslag' : 'inomhusförslag') + '.</div>';
+  weatherPanel.classList.remove('hidden');
+}
+
+function renderFallbackActivities(place, isOutdoor){
+  const items = isOutdoor ? fallbackActivities.sunny : fallbackActivities.rainy;
+  activityPanel.innerHTML =
+    '<div class="note">Ingen OpenTripMap-nyckel angiven — visar exempelaktiviteter för ' + place.name + '. Lägg till en nyckel ovan för riktiga platsträffar.</div>' +
+    '<div class="list">' + items.map(a =>
+      '<div class="card"><span class="emoji">' + a.emoji + '</span><div><h3>' + a.name + '</h3><p>' + a.desc + '</p></div></div>'
+    ).join('') + '</div>';
+  activityPanel.classList.remove('hidden');
+}
+
+async function renderRealActivities(place, isOutdoor, key){
+  const kinds = isOutdoor ? 'natural,parks,sport' : 'museums,cultural,foods';
+  const url = 'https://api.opentripmap.com/0.1/en/places/radius?radius=6000&lon=' + place.longitude +
+    '&lat=' + place.latitude + '&kinds=' + kinds + '&format=json&limit=6&apikey=' + encodeURIComponent(key);
+  try {
+    const res = await fetch(url);
+    if(!res.ok) throw new Error('OpenTripMap-anropet misslyckades (' + res.status + ')');
+    const data = await res.json();
+    if(!data || data.length === 0){
+      activityPanel.innerHTML = '<div class="note">Inga platser hittades via OpenTripMap i närheten av ' + place.name + '. Visar exempel istället.</div>';
+      renderFallbackActivities(place, isOutdoor);
+      return;
+    }
+    const items = data.slice(0,6);
+    activityPanel.innerHTML =
+      '<div class="note">Riktiga träffar från OpenTripMap nära ' + place.name + ' (' + kinds + ').</div>' +
+      '<div class="list">' + items.map(p =>
+        '<div class="card"><span class="emoji">📍</span><div><h3>' + (p.name || 'Namnlös plats') + '</h3><p>' + (p.kinds || '') + '</p></div></div>'
+      ).join('') + '</div>';
+    activityPanel.classList.remove('hidden');
+  } catch(err){
+    activityPanel.innerHTML = '<div class="note">Kunde inte hämta från OpenTripMap (' + err.message + '). Visar exempel istället.</div>';
+    renderFallbackActivities(place, isOutdoor);
+    activityPanel.classList.remove('hidden');
+  }
+}
+</script>
+</body>
+</html>

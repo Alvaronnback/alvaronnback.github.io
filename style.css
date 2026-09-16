@@ -538,3 +538,119 @@ footer {
     min-height: 60vh;
   }
 }
+/* Slutlig layout för projektsidor */
+
+body.project-body {
+  height: auto !important;
+  min-height: 100vh;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background: var(--light-grey);
+}
+
+body.project-body .project-page {
+  display: block !important;
+  width: 100% !important;
+  height: auto !important;
+  min-height: 100vh;
+  overflow: visible !important;
+  padding: clamp(1.5rem, 4vw, 4rem) var(--page-padding);
+  scroll-snap-type: none !important;
+}
+
+body.project-body .project-header {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-bottom: clamp(3rem, 7vw, 7rem);
+}
+
+body.project-body .project-header > a {
+  display: inline-block;
+  margin-bottom: clamp(4rem, 9vw, 8rem);
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--black);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+body.project-body .project-header .meta {
+  margin-bottom: 1rem;
+}
+
+body.project-body .project-header h1 {
+  max-width: 950px;
+  margin: 0 0 1.5rem;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+body.project-body .project-summary {
+  max-width: 650px;
+  font-size: clamp(1.15rem, 2vw, 1.6rem);
+  line-height: 1.5;
+}
+
+body.project-body .project-content {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(3rem, 6vw, 6rem);
+  border-top: 4px solid var(--blue);
+  background: var(--white);
+}
+
+body.project-body .project-content h2 {
+  margin: 0 0 1.5rem;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.8rem);
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+body.project-body .project-content p {
+  max-width: 720px;
+  margin: 0;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  body.project-body .project-header > a {
+    margin-bottom: 4rem;
+  }
+
+  body.project-body .project-content {
+    padding: 2rem 1.5rem;
+  }
+}
+/* Kompaktare projektrubrik och mer plats för arbetet */
+
+body.project-body .project-header > a {
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+body.project-body .project-header {
+  padding-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+body.project-body .project-header h1 {
+  max-width: 800px;
+  margin-bottom: 1rem;
+  font-size: clamp(2.8rem, 5.5vw, 5.5rem);
+  line-height: 0.95;
+}
+
+body.project-body .project-summary {
+  max-width: 720px;
+  font-size: clamp(1.05rem, 1.5vw, 1.35rem);
+}
+
+body.project-body .project-content {
+  min-height: 70vh;
+  padding: clamp(2.5rem, 5vw, 5rem);
+}
