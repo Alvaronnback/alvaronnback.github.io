@@ -417,21 +417,21 @@ footer {
   }
 }
 .hero {
-  background: #fdc8e0;
+  background: #DCECF5;
 }
 /* Strategic thinker · Growth marketer */
 .hero .kicker {
-  color: #f6f5f5;
+  color: #090B0D;
 }
 
 /* I FIND THE PATTERN */
 .hero h1 {
-  color: #faf8f8;
+  color: #090B0D;
 }
 
 /* Ordet PATTERN */
 .hero h1 em {
-  color: #fb1283;
+  color: #629FC6;
 }
 
 /* Then I turn it into action */
