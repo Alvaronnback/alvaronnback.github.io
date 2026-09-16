@@ -443,3 +443,31 @@ footer {
 .hero-foot .student {
   color: #000000;
 }
+.project-page {
+  min-height: 100vh;
+  padding: clamp(2rem, 6vw, 6rem) var(--page-padding);
+  background: var(--light-grey);
+}
+
+.project-page > a {
+  display: inline-block;
+  margin-bottom: clamp(4rem, 10vw, 9rem);
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid var(--black);
+  font-weight: 700;
+}
+
+.project-page h1 {
+  max-width: 900px;
+  margin: 1.5rem 0 2rem;
+  font-family: "Manrope", sans-serif;
+  font-size: clamp(3.5rem, 9vw, 9rem);
+  line-height: 0.9;
+  letter-spacing: -0.065em;
+}
+
+.project-page > p:last-child {
+  max-width: 700px;
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  line-height: 1.5;
+}
