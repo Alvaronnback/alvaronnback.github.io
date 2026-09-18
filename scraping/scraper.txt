@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const fs = require("fs");
 
 const BASE_URL = "https://www.allabolag.se/bransch-s%C3%B6k";
-const SEARCH = "Bryggeri";
+const SEARCH = "Arkitekt";
 
 const headers = {
   "User-Agent":
