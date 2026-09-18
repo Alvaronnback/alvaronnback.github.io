@@ -1,0 +1,294 @@
+const cheerio = require("cheerio");
+const fs = require("fs");
+
+const BASE_URL = "https://www.allabolag.se/bransch-s%C3%B6k";
+const SEARCH = "Bryggeri";
+
+const headers = {
+  "User-Agent":
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+    "Chrome/140.0.0.0 Safari/537.36",
+  Accept:
+    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Language": "sv-SE,sv;q=0.9,en;q=0.8",
+};
+
+// Vänta mellan anropen.
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+// Tar bort onödiga mellanslag och radbrytningar.
+function cleanText(text) {
+  return text.replace(/\s+/g, " ").trim();
+}
+
+// Gör text säker att skriva till en CSV-fil.
+function csvEscape(value) {
+  value = value ?? "";
+
+  if (
+    value.includes(",") ||
+    value.includes('"') ||
+    value.includes("\n") ||
+    value.includes("\r")
+  ) {
+    return `"${value.replaceAll('"', '""')}"`;
+  }
+
+  return value;
+}
+
+// Hämtar en sida.
+async function fetchPage(page) {
+  const url = new URL(BASE_URL);
+
+  url.searchParams.set("q", SEARCH);
+
+  if (page > 1) {
+    url.searchParams.set("page", page);
+  }
+
+  console.log(`Hämtar sida ${page}: ${url}`);
+
+  const response = await fetch(url, {
+    headers,
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      `HTTP ${response.status} ${response.statusText}`
+    );
+  }
+
+  return await response.text();
+}
+
+// Hämtar företagen ur en HTML-sida.
+function extractCompanies(html) {
+  const $ = cheerio.load(html);
+
+  const companies = [];
+
+  // Ett SearchResultCard-card = ett företag.
+  $(".SearchResultCard-card").each((index, element) => {
+    const card = $(element);
+
+    // -------------------------
+    // 1. Företagsnamn
+    // -------------------------
+
+    const name = cleanText(
+      card.find("h2 a").first().text()
+    );
+
+    // -------------------------
+    // 2. Organisationsnummer
+    // -------------------------
+
+    let orgNumber = "";
+
+    card
+      .find(
+        ".SearchResultCard-iconDataContainer .CardHeader-propertyList"
+      )
+      .each((i, element) => {
+        const text = cleanText($(element).text());
+
+        if (text.startsWith("Org.nr")) {
+          orgNumber = cleanText(
+            text.replace(/^Org\.nr\s*/, "")
+          );
+        }
+      });
+
+    // -------------------------
+    // 3. Telefonnummer
+    // -------------------------
+
+    let phone = "";
+
+    const phoneElement = card.find(
+      ".SearchResultCard-iconDataContainer .CardHeader-phone"
+    );
+
+    if (phoneElement.length) {
+      phone = cleanText(
+        phoneElement
+          .text()
+          .replace(/^Telefon\s*/, "")
+      );
+    }
+
+    // -------------------------
+    // 4. Adress
+    // -------------------------
+
+    let address = "";
+
+    /*
+      I iconDataContainer finns propertyList-element för:
+
+      - Org.nr
+      - Telefon
+      - Adress
+
+      Adressen är därför det propertyList-element som
+      varken börjar med "Org.nr" eller "Telefon".
+    */
+
+    card
+      .find(
+        ".SearchResultCard-iconDataContainer .CardHeader-propertyList"
+      )
+      .each((i, element) => {
+        const text = cleanText($(element).text());
+
+        if (
+          !text.startsWith("Org.nr") &&
+          !text.startsWith("Telefon")
+        ) {
+          address = text;
+        }
+      });
+
+    // Lägg till företaget.
+    // Saknas något fält blir värdet bara "".
+    companies.push({
+      name,
+      orgNumber,
+      phone,
+      address,
+    });
+  });
+
+  return companies;
+}
+
+async function main() {
+  // --------------------------------
+  // Hämta första sidan
+  // --------------------------------
+
+  const firstHtml = await fetchPage(1);
+
+  const $ = cheerio.load(firstHtml);
+
+  // Leta efter t.ex. "Sida 1 av 400".
+  const bodyText = cleanText($("body").text());
+
+  const pageMatch = bodyText.match(
+    /Sida\s+\d+\s+av\s+(\d+)/i
+  );
+
+  let totalPages = 1;
+
+  if (pageMatch) {
+    totalPages = Number(pageMatch[1]);
+  }
+
+  console.log(`Antal sidor: ${totalPages}`);
+
+  // Map används för att undvika dubletter.
+  const companies = new Map();
+
+  function addCompanies(html) {
+    const results = extractCompanies(html);
+
+    for (const company of results) {
+      /*
+        Organisationsnummer är bästa unika nyckeln.
+
+        Om det saknas använder vi namn + adress.
+      */
+      const key =
+        company.orgNumber ||
+        `${company.name}|${company.address}`;
+
+      companies.set(key, company);
+    }
+
+    return results.length;
+  }
+
+  // --------------------------------
+  // Sida 1
+  // --------------------------------
+
+  let count = addCompanies(firstHtml);
+
+  console.log(
+    `Sida 1: ${count} företag hittades.`
+  );
+
+  // --------------------------------
+  // Resterande sidor
+  // --------------------------------
+
+  for (let page = 2; page <= totalPages; page++) {
+    // Vänta 1 sekund mellan anropen.
+    await sleep(1000);
+
+    const html = await fetchPage(page);
+
+    count = addCompanies(html);
+
+    console.log(
+      `Sida ${page}: ${count} företag hittades. ` +
+        `Totalt ${companies.size} unika företag.`
+    );
+  }
+
+  // --------------------------------
+  // Skapa CSV
+  // --------------------------------
+
+  const rows = [];
+
+  // Rubrikrad.
+  rows.push([
+    "Företagsnamn",
+    "Organisationsnummer",
+    "Telefonnummer",
+    "Adress",
+  ]);
+
+  // Ett företag per rad.
+  for (const company of companies.values()) {
+    rows.push([
+      company.name,
+      company.orgNumber,
+      company.phone,
+      company.address,
+    ]);
+  }
+
+  const csv = rows
+    .map((row) => row.map(csvEscape).join(","))
+    .join("\n");
+
+  /*
+    \uFEFF = UTF-8 BOM.
+    Det gör att svenska tecken som å, ä och ö brukar
+    fungera bättre om filen öppnas i Excel.
+  */
+  fs.writeFileSync(
+    "foretag.csv",
+    "\uFEFF" + csv,
+    "utf8"
+  );
+
+  console.log("");
+  console.log("Klart!");
+  console.log(`${companies.size} företag sparades.`);
+  console.log("Resultatet finns i foretag.csv");
+}
+
+main().catch((error) => {
+  console.error("");
+  console.error("Scrapingen misslyckades:");
+  console.error(error.message);
+
+  process.exit(1);
+});
