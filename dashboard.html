@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Merchandise Store — Alva Rönnback</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html { height: auto; overflow-y: auto; }
+    body.dashboard-page .project-content { min-height: 0; }
+    body.dashboard-page .project-content + .project-content {
+      border-top: 1px solid var(--line-dark);
+    }
+    .dashboard-embed {
+      width: 85%;
+      margin: 2rem auto 0;
+    }
+    .dashboard-embed img {
+      width: 100%;
+      height: auto;
+      margin: 0;
+    }
+    .dashboard-facts { margin: 0; line-height: 1.7; }
+    .dashboard-facts dt { font-weight: 700; }
+    .dashboard-facts dd { margin: 0 0 1.5rem; }
+    .dashboard-facts dd:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body class="project-body dashboard-page">
+  <main class="project-page">
+    <header class="project-header">
+      <a href="index.html#work">← Tillbaka</a>
+      <div>
+        <p class="meta">Dashboard · Google Analytics · Looker Studio</p>
+        <h1>Google Merchandise Store</h1>
+        <p class="project-summary">
+          En dashboard som visualiserar och sammanfattar målgruppen för Google
+          Merchandise Store baserat på data från Google Analytics.
+        </p>
+      </div>
+    </header>
+
+    <section class="project-content" aria-labelledby="purpose-title">
+      <h2 id="purpose-title">01 — Syfte</h2>
+      <p>
+        Syftet med dashboarden är att göra Analytics-datan mer lättöverskådlig
+        och ge en tydligare bild av vilka användare som besöker Google
+        Merchandise Store. Visualiseringen samlar målgruppsdata i en
+        överskådlig presentation.
+      </p>
+    </section>
+
+    <section class="project-content" aria-labelledby="dashboard-title">
+      <h2 id="dashboard-title">02 — Dashboard</h2>
+      <p>
+        Dashboarden är skapad i Google Looker Studio och presenterar
+        målgruppen för Google Merchandise Store. Här visas dashboarden som bild.
+      </p>
+      <div class="dashboard-embed">
+        <img
+          src="images/dashboard-page-1.png"
+          alt="Dashboard över målgruppen för Google Merchandise Store, skapad i Looker Studio med Google Analytics-data."
+          loading="lazy"
+        >
+      </div>
+      <a class="file-link"
+        href="documents/google-merchandise-store-dashboard.pdf"
+        target="_blank" rel="noopener noreferrer">
+        Öppna dashboard som PDF ↗
+      </a>
+    </section>
+
+    <section class="project-content" aria-labelledby="data-title">
+      <h2 id="data-title">03 — Data & verktyg</h2>
+      <dl class="dashboard-facts">
+        <dt>Datakälla</dt>
+        <dd>Google Analytics-data som tillhandahålls för Google Merchandise Store.</dd>
+        <dt>Visualisering</dt>
+        <dd>Google Looker Studio</dd>
+        <dt>Syfte</dt>
+        <dd>Målgruppsanalys och datavisualisering</dd>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>
