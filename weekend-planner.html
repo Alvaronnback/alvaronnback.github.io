@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekend Planner — Alva Rönnback</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="weekend-planner.js" defer></script>
+  <style>
+    html { height: auto; overflow-y: auto; }
+    body.planner-page .project-content { min-height: 0; }
+    body.planner-page .project-content + .project-content { border-top: 1px solid var(--line-dark); }
+    .weather-form { display: flex; flex-wrap: wrap; align-items: end; gap: 1rem; }
+    .weather-field { flex: 1 1 220px; }
+    .weather-field label { display: block; margin-bottom: 0.6rem; font-weight: 700; }
+    .weather-field select { width: 100%; padding: 0.9rem 1rem; font: inherit; color: var(--black); background: var(--white); border: 1px solid var(--black); border-radius: 4px; }
+    .weather-form button { margin: 0; font: inherit; font-weight: 700; background: var(--black); color: var(--white); cursor: pointer; }
+    .weather-form button:disabled { opacity: 0.65; cursor: wait; }
+    .planner-page :is(button, select, a):focus-visible { outline: 3px solid var(--blue); outline-offset: 4px; }
+    body.planner-page #weather-status { margin-top: 1.5rem; }
+    .weather-result { margin-top: 1.5rem; padding: clamp(1rem, 3vw, 2rem); background: var(--light-grey); border-left: 3px solid var(--blue); }
+    .weather-values { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; margin: 1.5rem 0 0; }
+    .weather-values dt { font-size: 0.85rem; margin-bottom: 0.5rem; }
+    .weather-values dd { margin: 0; font-size: 1.3rem; font-weight: 700; }
+    .planner-facts { margin: 0; line-height: 1.7; }
+    .planner-facts dt { font-weight: 700; }
+    .planner-facts dd { margin: 0 0 1rem; }
+    .planner-flow { display: flex; flex-wrap: wrap; gap: 0.7rem; padding: 0; margin: 1.5rem 0 0; list-style: none; line-height: 1.7; }
+    .planner-flow li:not(:last-child)::after { content: " →"; margin-left: 0.7rem; }
+    .planner-source { display: inline-block; margin-top: 1.5rem; text-decoration: underline; }
+  </style>
+</head>
+<body class="project-body planner-page">
+  <main class="project-page">
+    <header class="project-header">
+      <a href="api-mashup.html">← Tillbaka till projektet</a>
+      <div>
+        <p class="meta">Webbapp · API · Open-Meteo</p>
+        <h1>Weekend Planner</h1>
+        <p class="project-summary">En fungerande webbapp som hämtar aktuell väderdata från Open-Meteo och visar resultatet direkt på sidan.</p>
+      </div>
+    </header>
+    <section class="project-content" aria-labelledby="app-title">
+      <h2 id="app-title">01 — Testa webbappen</h2>
+      <form id="weather-form" class="weather-form">
+        <div class="weather-field">
+          <label for="city">Välj stad</label>
+          <select id="city" name="city">
+            <option value="stockholm">Stockholm</option>
+            <option value="goteborg">Göteborg</option>
+            <option value="malmo">Malmö</option>
+            <option value="umea">Umeå</option>
+          </select>
+        </div>
+        <button type="submit" class="file-link" id="weather-button">Hämta väder</button>
+      </form>
+      <noscript><p>Aktivera JavaScript i webbläsaren för att hämta vädret.</p></noscript>
+      <p id="weather-status" role="status" aria-live="polite"></p>
+      <div id="weather-result" class="weather-result" hidden>
+        <h3 id="weather-city"></h3>
+        <dl class="weather-values">
+          <div><dt>Temperatur</dt><dd id="weather-temperature"></dd></div>
+          <div><dt>Vindhastighet</dt><dd id="weather-wind"></dd></div>
+          <div><dt>Aktuellt väder</dt><dd id="weather-description"></dd></div>
+        </dl>
+      </div>
+      <a class="planner-source" href="https://open-meteo.com/" target="_blank" rel="noopener noreferrer">Väderdata från Open-Meteo ↗</a>
+    </section>
+    <section class="project-content" aria-labelledby="how-title">
+      <h2 id="how-title">02 — Så fungerar den</h2>
+      <p>Webbappen använder JavaScript Fetch API för att skicka en förfrågan till Open-Meteo. Svaret returneras som JSON och den relevanta väderdatan visas sedan direkt på sidan.</p>
+      <ol class="planner-flow" aria-label="Från val av stad till väderresultat">
+        <li>Användare</li><li>JavaScript</li><li>Open-Meteo API</li><li>JSON-data</li><li>Resultat på sidan</li>
+      </ol>
+    </section>
+    <section class="project-content" aria-labelledby="data-title">
+      <h2 id="data-title">03 — Data & teknik</h2>
+      <dl class="planner-facts">
+        <dt>API</dt><dd>Open-Meteo</dd>
+        <dt>Teknik</dt><dd>HTML, CSS och JavaScript</dd>
+        <dt>Data</dt><dd>Aktuell väderdata</dd>
+        <dt>Metod</dt><dd>Fetch API</dd>
+      </dl>
+    </section>
+  </main>
+</body>
+</html>
