@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bravida Student Lab — Alva Rönnback</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html { height: auto; overflow-y: auto; }
+    .bravida-intro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+      align-items: center;
+      gap: clamp(2rem, 5vw, 5rem);
+    }
+    .bravida-logo {
+      padding: clamp(1rem, 3vw, 2rem);
+      background: var(--white);
+    }
+    .bravida-logo img { display: block; width: 100%; height: auto; }
+    body.bravida-page .project-header h1 { overflow-wrap: anywhere; }
+    body.bravida-page .project-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: 1.5rem clamp(2rem, 4vw, 4rem);
+      min-height: 0;
+    }
+    body.bravida-page .project-content h2 {
+      margin: 0;
+      font-size: clamp(1.75rem, 2.8vw, 2.7rem);
+      line-height: 1.1;
+    }
+    .bravida-number {
+      display: block;
+      margin-bottom: 1rem;
+      font: 700 0.75rem "Inter", sans-serif;
+      letter-spacing: 0.12em;
+    }
+    .bravida-areas { grid-column: 2; }
+    @media (max-width: 760px) {
+      .bravida-intro,
+      body.bravida-page .project-content { grid-template-columns: minmax(0, 1fr); }
+      .bravida-logo { width: 100%; max-width: 340px; }
+      .bravida-areas { grid-column: 1; }
+    }
+    body.bravida-page .project-content + .project-content {
+      border-top: 1px solid var(--line-dark);
+    }
+    .bravida-areas {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 0 2rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      line-height: 1.6;
+    }
+    .bravida-areas li {
+      padding: 1rem 0;
+      border-top: 1px solid var(--line-dark);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body class="project-body bravida-page">
+  <main class="project-page">
+    <header class="project-header">
+      <a href="index.html#work">← Tillbaka</a>
+      <div class="bravida-intro">
+        <div>
+        <p class="meta">Student Lab · Berghs · Bravida</p>
+        <h1>Bravida Student Lab</h1>
+        <p class="project-summary">
+          Strategiskt kommunikationskoncept utvecklat under Student Lab på Berghs.
+        </p>
+        </div>
+        <div class="bravida-logo">
+          <img src="images/bravida-logo.png" alt="Bravida" width="4920" height="1654">
+        </div>
+      </div>
+    </header>
+
+    <section class="project-content" aria-labelledby="challenge-title">
+      <h2 id="challenge-title"><span class="bravida-number">01</span>Utmaningen</h2>
+      <p>
+        Under ett Student Lab på Berghs arbetade jag tillsammans med ett team med
+        en strategisk kommunikationsutmaning för Bravida. Uppdraget var att
+        undersöka hur företagets breda roll i det nordiska samhället kunde göras
+        mer relevant och begriplig för fler människor.
+      </p>
+    </section>
+
+    <section class="project-content" aria-labelledby="work-title">
+      <h2 id="work-title"><span class="bravida-number">02</span>Arbetet</h2>
+      <p>
+        Arbetet omfattade målgruppsanalys, varumärkespositionering,
+        konceptutveckling och exempel på hur en långsiktig idé kan fungera
+        i flera marknader och kommunikationsområden.
+      </p>
+      <ul class="bravida-areas" aria-label="Arbetsområden">
+        <li>Målgruppsanalys</li>
+        <li>Varumärkespositionering</li>
+        <li>Konceptutveckling</li>
+        <li>Skalbarhet över flera marknader och kommunikationsområden</li>
+      </ul>
+    </section>
+
+    <section class="project-content" aria-labelledby="result-title">
+      <h2 id="result-title"><span class="bravida-number">03</span>Resultatet</h2>
+      <p>
+        Resultatet blev ett strategiskt förankrat kommunikationskoncept som
+        möttes av mycket positiv respons från kunden.
+      </p>
+    </section>
+
+    <section class="project-content" aria-labelledby="about-title">
+      <h2 id="about-title"><span class="bravida-number">04</span>Om caset</h2>
+      <p>
+        Med hänsyn till kunden delar jag inte lösningens innehåll, men projektet
+        är ett exempel på vår förmåga att omvandla en komplex varumärkesutmaning
+        till en tydlig, relevant och uppskattad idé.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

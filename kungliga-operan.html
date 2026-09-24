@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kungliga Operan — Alva Rönnback</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    html { height: auto; overflow-y: auto; }
+    body.operan-page .project-header h1 { overflow-wrap: anywhere; }
+    body.operan-page .project-content {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+      gap: 1.5rem clamp(2rem, 4vw, 4rem);
+      min-height: 0;
+    }
+    body.operan-page .project-content + .project-content {
+      border-top: 1px solid var(--line-dark);
+    }
+    body.operan-page .project-content h2 {
+      margin: 0;
+      font-size: clamp(1.75rem, 2.8vw, 2.7rem);
+      line-height: 1.1;
+    }
+    .operan-methods {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 0 2rem;
+      margin: 1.5rem 0 0;
+      padding: 0;
+      list-style: none;
+      line-height: 1.6;
+    }
+    .operan-methods li {
+      padding: 1rem 0;
+      border-top: 1px solid var(--line-dark);
+      font-weight: 600;
+    }
+    .operan-process {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem 0.9rem;
+      margin: 2rem 0 0;
+      padding: 1.5rem 0 0;
+      border-top: 1px solid var(--line-dark);
+      list-style: none;
+      line-height: 1.6;
+      font-weight: 600;
+    }
+    .operan-process li:not(:last-child)::after { content: " →"; margin-left: 0.9rem; }
+    body.operan-page .project-content p + p { margin-top: 1.5rem; }
+    @media (max-width: 760px) {
+      body.operan-page .project-content { grid-template-columns: minmax(0, 1fr); }
+    }
+  </style>
+</head>
+<body class="project-body operan-page">
+  <main class="project-page">
+    <header class="project-header">
+      <a href="index.html#work">← Tillbaka</a>
+      <div>
+        <p class="meta">Berghs · Kungliga Operan · Communication & UX</p>
+        <h1>Kungliga Operan</h1>
+        <p class="project-summary">
+          Ett strategiskt projekt om hur kommunikation, data och UX kan minska
+          avståndet mellan nyfikenhet och ett första operabesök.
+        </p>
+      </div>
+    </header>
+
+    <section class="project-content" aria-labelledby="challenge-title">
+      <h2 id="challenge-title"><span class="project-section-number">01</span>Utmaningen</h2>
+      <p>
+        Under ett projekt på Berghs fick vårt team i uppdrag att hjälpa Kungliga
+        Operan att nå nya målgrupper och minska avståndet mellan nyfikenhet och
+        ett första operabesök.
+      </p>
+    </section>
+
+    <section class="project-content" aria-labelledby="research-title">
+      <h2 id="research-title"><span class="project-section-number">02</span>Research & insikter</h2>
+      <div>
+        <p>
+          Genom intervjuer, enkäter, webbanalys och kartläggning av den digitala
+          kundresan identifierade vi hinder i både kommunikationen och vägen
+          till biljettköp.
+        </p>
+        <ul class="operan-methods" aria-label="Researchmetoder">
+          <li>Intervjuer</li>
+          <li>Enkäter</li>
+          <li>Webbanalys</li>
+          <li>Kartläggning av den digitala kundresan</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="project-content" aria-labelledby="concept-title">
+      <h2 id="concept-title"><span class="project-section-number">03</span>Från insikt till koncept</h2>
+      <div>
+        <p>
+          Insikterna omsattes i ett sammanhållet koncept som förenade
+          varumärkeskommunikation, aktivering och en mer användarvänlig digital
+          upplevelse. Research och data låg till grund för det kreativa och
+          strategiska arbetet med den digitala kundresan och UX.
+        </p>
+        <ol class="operan-process" aria-label="Arbetsprocess">
+          <li>Research</li>
+          <li>Insikt</li>
+          <li>Koncept</li>
+          <li>Kundresa</li>
+          <li>Handling</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="project-content" aria-labelledby="result-title">
+      <h2 id="result-title"><span class="project-section-number">04</span>Resultatet</h2>
+      <p>
+        Förslaget fick ett mycket positivt mottagande av kunden, som särskilt
+        uppskattade kombinationen av kreativ höjd och konkret genomförbarhet.
+      </p>
+    </section>
+
+    <section class="project-content" aria-labelledby="about-title">
+      <h2 id="about-title"><span class="project-section-number">05</span>Om caset</h2>
+      <div>
+        <p>
+          Projektet visar hur kommunikation, data och UX kan samverka genom hela
+          kundresan, från första intresse till handling.
+        </p>
+        <p>
+          Av respekt för kunden har jag valt att inte visa den specifika
+          lösningen här.
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

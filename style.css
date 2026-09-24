@@ -654,3 +654,11 @@ body.project-body .project-content {
   min-height: 70vh;
   padding: clamp(2.5rem, 5vw, 5rem);
 }
+
+/* Avsnittsnummer ovanfor projektsidornas rubriker */
+.project-body .project-section-number {
+  display: block;
+  margin-bottom: 1rem;
+  font: 700 0.75rem "Inter", sans-serif;
+  letter-spacing: 0.12em;
+}
