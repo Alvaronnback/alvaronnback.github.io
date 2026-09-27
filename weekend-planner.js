@@ -8,16 +8,16 @@ const cities = {
 
 // Open-Meteos WMO-koder översätts till svenska. Vädret bestäms av API-svaret.
 const weatherDescriptions = {
-  0: "Klart", 1: "Mestadels klart", 2: "Delvis molnigt", 3: "Mulet",
-  45: "Dimma", 48: "Dimma med rimfrost",
-  51: "Lätt duggregn", 53: "Måttligt duggregn", 55: "Kraftigt duggregn",
-  56: "Lätt underkylt duggregn", 57: "Kraftigt underkylt duggregn",
-  61: "Lätt regn", 63: "Måttligt regn", 65: "Kraftigt regn",
-  66: "Lätt underkylt regn", 67: "Kraftigt underkylt regn",
-  71: "Lätt snöfall", 73: "Måttligt snöfall", 75: "Kraftigt snöfall", 77: "Snökorn",
-  80: "Lätta regnskurar", 81: "Måttliga regnskurar", 82: "Kraftiga regnskurar",
-  85: "Lätta snöbyar", 86: "Kraftiga snöbyar",
-  95: "Åska", 96: "Åska med lätt hagel", 99: "Åska med kraftigt hagel",
+  0: "Clear", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+  45: "Fog", 48: "Depositing rime fog",
+  51: "Light drizzle", 53: "Moderate drizzle", 55: "Heavy drizzle",
+  56: "Light freezing drizzle", 57: "Heavy freezing drizzle",
+  61: "Light rain", 63: "Moderate rain", 65: "Heavy rain",
+  66: "Light freezing rain", 67: "Heavy freezing rain",
+  71: "Light snowfall", 73: "Moderate snowfall", 75: "Heavy snowfall", 77: "Snow grains",
+  80: "Light rain showers", 81: "Moderate rain showers", 82: "Heavy rain showers",
+  85: "Light snow showers", 86: "Heavy snow showers",
+  95: "Thunderstorm", 96: "Thunderstorm with light hail", 99: "Thunderstorm with heavy hail",
 };
 
 const form = document.getElementById("weather-form");
@@ -34,8 +34,8 @@ form.addEventListener("submit", async (event) => {
 
   button.disabled = true;
   citySelect.disabled = true;
-  button.textContent = "Hämtar…";
-  statusText.textContent = "Hämtar väderdata…";
+  button.textContent = "Loading…";
+  statusText.textContent = "Fetching weather data…";
   result.hidden = true; // Visa inte tidigare väder medan ett nytt anrop pågår.
 
   // Avbryt efter 15 sekunder så att användaren kan försöka igen vid nätverksproblem.
@@ -51,7 +51,7 @@ form.addEventListener("submit", async (event) => {
 
     // Här skickas det riktiga HTTPS-anropet till Open-Meteo.
     const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) throw new Error("API-anropet misslyckades");
+    if (!response.ok) throw new Error("API request failed");
 
     // Gör JSON-svaret till ett JavaScript-objekt och läs aktuell data och enheter.
     const data = await response.json();
@@ -63,26 +63,26 @@ form.addEventListener("submit", async (event) => {
         !Number.isInteger(current.weather_code) ||
         typeof units.temperature_2m !== "string" ||
         typeof units.wind_speed_10m !== "string") {
-      throw new Error("API-svaret saknar väderdata");
+      throw new Error("Weather data is missing from the API response");
     }
 
     // textContent skriver API-värdena som text i de tomma HTML-elementen.
     document.getElementById("weather-city").textContent = city.name;
     document.getElementById("weather-temperature").textContent =
-      `${current.temperature_2m.toLocaleString("sv-SE")} ${units.temperature_2m}`;
+      `${current.temperature_2m.toLocaleString("en-GB")} ${units.temperature_2m}`;
     document.getElementById("weather-wind").textContent =
-      `${current.wind_speed_10m.toLocaleString("sv-SE")} ${units.wind_speed_10m}`;
+      `${current.wind_speed_10m.toLocaleString("en-GB")} ${units.wind_speed_10m}`;
     document.getElementById("weather-description").textContent =
-      weatherDescriptions[current.weather_code] ?? `Väderkod ${current.weather_code}`;
+      weatherDescriptions[current.weather_code] ?? `Weather code ${current.weather_code}`;
     result.hidden = false;
-    statusText.textContent = `Vädret för ${city.name} har hämtats.`;
+    statusText.textContent = `Weather for ${city.name} loaded.`;
   } catch (error) {
-    statusText.textContent = "Det gick inte att hämta väderdata. Försök igen.";
+    statusText.textContent = "Could not fetch weather data. Please try again.";
   } finally {
     // Körs både vid lyckat anrop och vid fel.
     clearTimeout(timeout);
     button.disabled = false;
     citySelect.disabled = false;
-    button.textContent = "Hämta väder";
+    button.textContent = "Get weather";
   }
 });

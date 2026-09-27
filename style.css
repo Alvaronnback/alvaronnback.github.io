@@ -663,7 +663,7 @@ body.project-body .project-content {
   letter-spacing: 0.12em;
 }
 
-/* Förenklad startsida och Skills: avgränsat från befintliga case. */
+/* Förenklad startsida: avgränsat från befintliga case. */
 .portfolio-home .hero-copy {
   justify-content: space-between;
   gap: clamp(3rem, 8vh, 7rem);
@@ -701,26 +701,27 @@ body.project-body .project-content {
 }
 .portfolio-home .intro {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 32rem) minmax(0, 30rem);
   align-content: start;
   align-items: start;
-  gap: 2rem clamp(2rem, 4vw, 4rem);
-  padding-top: clamp(3rem, 6vw, 6rem);
-  padding-bottom: clamp(3rem, 6vw, 6rem);
+  gap: 1.75rem clamp(1.5rem, 3vw, 3rem);
+  padding-top: clamp(2.5rem, 4vw, 4rem);
+  padding-bottom: clamp(2.5rem, 4vw, 4rem);
 }
 .portfolio-home .intro > .tag {
   grid-column: 1 / -1;
 }
 .portfolio-home .intro h2 {
-  max-width: 29ch;
+  max-width: 32ch;
   margin: 0;
-  font-size: clamp(1.65rem, 2.5vw, 2.5rem);
-  line-height: 1.25;
-  letter-spacing: -0.035em;
+  font-size: clamp(1.4rem, 1.9vw, 1.9rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
   text-wrap: balance;
 }
 .portfolio-home .intro-body {
-  max-width: 40ch;
+  max-width: 46ch;
   margin: 0;
   font-size: clamp(1rem, 1.3vw, 1.15rem);
   line-height: 1.7;
@@ -732,6 +733,27 @@ body.project-body .project-content {
   }
   .portfolio-home .intro-body { max-width: 50ch; }
 }
+.portfolio-home .contact {
+  padding-top: clamp(2.5rem, 5vw, 5rem);
+  padding-bottom: clamp(2.5rem, 5vw, 5rem);
+}
+.portfolio-home .contact h2 {
+  margin: 2rem 0 1.5rem;
+  font-size: clamp(2.5rem, 4vw, 4rem);
+  line-height: 1.1;
+}
+.portfolio-home .contact > p:not(.tag) {
+  max-width: 46ch;
+  font-size: clamp(1rem, 1.3vw, 1.15rem);
+  font-weight: 400;
+  line-height: 1.7;
+}
+.portfolio-home .contact > div {
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+  margin-top: 2rem;
+}
+.portfolio-home .contact a { overflow-wrap: anywhere; }
 .portfolio-home .work {
   padding-top: clamp(2.5rem, 5vw, 5rem);
 }
@@ -739,52 +761,28 @@ body.project-body .project-content {
   display: block;
   margin-bottom: clamp(2rem, 4vw, 4rem);
 }
-:is(.portfolio-home, .skills-page) .nav nav {
+.portfolio-home .nav nav {
   gap: clamp(1rem, 2.5vw, 3rem);
 }
-:is(.portfolio-home, .skills-page) a:focus-visible {
+.portfolio-home a:focus-visible {
   outline: 2px solid var(--black);
   outline-offset: 5px;
 }
-html.skills-document { height: auto; overflow-y: auto; }
-body.skills-page .project-content {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.5fr);
-  gap: clamp(1.5rem, 4vw, 4rem);
-  min-height: 0;
-}
-body.skills-page .project-content + .project-content {
-  border-top: 1px solid var(--line-dark);
-}
-body.skills-page .project-content h2 {
-  margin: 0;
-  font-size: clamp(1.75rem, 2.8vw, 2.7rem);
-  line-height: 1.15;
-}
-.skills-list { margin: 0; padding: 0; list-style: none; }
-.skills-list li {
-  padding: 1rem 0;
-  border-bottom: 1px solid var(--line-dark);
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  line-height: 1.5;
-}
-.skills-list li:first-child { padding-top: 0; }
-.skills-list li:last-child { border-bottom: 0; padding-bottom: 0; }
 @media (max-width: 760px) {
-  :is(.portfolio-home, .skills-page) .nav {
+  .portfolio-home .nav {
     height: 120px;
     flex-wrap: wrap;
     align-content: center;
     gap: 1rem;
   }
-  :is(.portfolio-home, .skills-page) .nav nav {
+  .portfolio-home .nav nav {
     display: flex;
     order: 3;
     width: 100%;
     gap: 1.5rem;
     font-size: 0.8rem;
   }
-  :is(.portfolio-home, .skills-page) .nav-cta { margin-left: auto; }
+  .portfolio-home .nav-cta { margin-left: auto; }
   .portfolio-home > main { height: calc(100svh - 120px); }
   .portfolio-home .work article {
     grid-template-columns: 28px minmax(0, 1fr);
@@ -792,5 +790,4 @@ body.skills-page .project-content h2 {
   }
   .portfolio-home .work h3 { font-size: clamp(1.5rem, 6vw, 2rem); overflow-wrap: anywhere; }
   .portfolio-home .work article > a { max-width: 100%; }
-  body.skills-page .project-content { grid-template-columns: minmax(0, 1fr); }
 }
