@@ -692,7 +692,7 @@ body.project-body .project-content {
 .portfolio-home .hero-positioning {
   max-width: 30ch;
   justify-self: end;
-  font-size: clamp(0.85rem, 1.1vw, 1rem);
+  font-size: clamp(1.25rem, 1.65vw, 1.5rem);
   line-height: 1.7;
 }
 @media (max-width: 760px) {
